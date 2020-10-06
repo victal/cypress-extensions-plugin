@@ -1,5 +1,5 @@
 {
-  "name": "cypress-extension-plugin",
+  "name": "@elistone/cypress-extensions-plugin",
   "version": "0.1.1",
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
