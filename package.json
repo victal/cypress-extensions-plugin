@@ -1,6 +1,6 @@
 {
-  "name": "cypress-browser-extension-plugin",
-  "version": "0.1.0",
+  "name": "cypress-extension-plugin",
+  "version": "0.1.1",
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
   "scripts": {
@@ -12,6 +12,12 @@
     "extension"
   ],
   "author": "Emmanuel Joubaud",
+  "contributors": [
+    {
+      "name": "Eli Stone",
+      "url": "https://github.com/elistone"
+    }
+  ],
   "license": "ISC",
   "devDependencies": {
     "cypress": "^2.1.0",
@@ -27,5 +33,8 @@
     "fs-extra": "^5.0.0",
     "nanoid": "^1.0.2",
     "unzip-crx": "^0.2.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }
