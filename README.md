@@ -14,14 +14,14 @@ In your project's [plugins file](https://on.cypress.io/guides/guides/plugins.htm
 
 ```javascript
 // cypress/plugins/index.js
-const extensionLoader = require('cypress-browser-extension-plugin/loader');
+const extensionLoader = require('cypress-extensions-plugin/loader');
 
 module.exports = (on) => {
   on('before:browser:launch', extensionLoader.load('/path/to/your/extension'));
 }
 
 // cypress/support/command.js
-const addExtensionCommands = require('cypress-browser-extension-plugin/commands');
+const addExtensionCommands = require('cypress-extensions-plugin/commands');
 addExtensionCommands(Cypress);
 
 // cypress/integration/my_spec.js or cypress/support/index.js
@@ -37,7 +37,7 @@ That's all you need to load a single extension and reset its storage on each tes
 Use this if you don't need Cypress to send commands to your Browser API (e.g. no local storage to reset):
 
 ```javascript
-const loadExtension = require('cypress-browser-extension-plugin/loader').load;
+const loadExtension = require('cypress-extensions-plugin/loader').load;
 
 on('before:browser:launch', loadExtension({
   source: '/path/to/myext',
@@ -79,7 +79,7 @@ on('before:browser:launch', (browser = {}, args) => {
 A few convenience commands are provided for storage management:
 
 ```javascript
-const addExtensionCommands = require('cypress-browser-extension-plugin/commands');
+const addExtensionCommands = require('cypress-extensions-plugin/commands');
 addExtensionCommands(Cypress) // options is optional, more below
 
 // in spec/beforeEach hooks
@@ -116,7 +116,7 @@ cy.execExtensionCommand('runtime', 'postMessage', [msg], {
 You can set default options for all subsequent commands with a context config:
 
 ```javascript
-require('cypress-browser-extension-plugin/commands')(Cypress)({
+require('cypress-extensions-plugin/commands')(Cypress)({
   alias: 'myOtherExtension', // send commands to specific extension loaded with custom alias
   debug: true,               // log extension command stuff to console by default
   timeout: 5000,             // change default timeout for extension commands
@@ -126,7 +126,7 @@ require('cypress-browser-extension-plugin/commands')(Cypress)({
 If you don't want to pollute your Cypress namespace or log with commands, you can get a simple helper object, which works the same as the commands without the Cypress command/log sugar. All the helpers just return a promise:
 
 ```javascript
-const myExt = require('cypress-browser-extension-plugin/helpers')(options); // options is optional
+const myExt = require('cypress-extensions-plugin/helpers')(options); // options is optional
 
 myExt.clearStorage(type)        // clear `type` storage ('local', 'sync' or 'managed')
 myExt.setStorage(type, obj)     // => chrome.storage[type].set(obj)
