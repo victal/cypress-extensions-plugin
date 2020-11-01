@@ -1,8 +1,9 @@
 name: Publish to NPMJS and GPR
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - master
 
 jobs:
   publish-to-npm-and-gpr:
@@ -19,14 +20,13 @@ jobs:
           git config user.name "Actions User"
           git config user.email noreply@github.com
           npm version 1.0.$(date +%s)
-
+          
       # Publish to NPMJS
       - uses: actions/setup-node@master
         with:
           node-version: 12
           registry-url: 'https://registry.npmjs.org/'
       - name: Publish to NPMJS
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
           npm config set scope "@elistone"
