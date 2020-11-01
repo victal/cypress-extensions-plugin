@@ -26,6 +26,7 @@ jobs:
           node-version: 12
           registry-url: 'https://registry.npmjs.org/'
       - name: Publish to NPMJS
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
         run: |
           npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
           npm config set scope "@elistone"
