@@ -83,9 +83,9 @@ const addExtensionCommands = require('@elistone/cypress-extensions-plugin/comman
 addExtensionCommands(Cypress) // options is optional, more below
 
 // in spec/beforeEach hooks
-cy.clearStorage(type);        // clear `type` storage ('local', 'sync' or 'managed')
-cy.setStorage(type, obj);     // => chrome.storage[type].set(obj)
-cy.getStorage(type, [k1,k2]); // => chrome.storage[type].get([k1,k2])
+cy.clearExtensionStorage(type);        // clear `type` storage ('local', 'sync' or 'managed')
+cy.setExtensionStorage(type, obj);     // => chrome.storage[type].set(obj)
+cy.getExtensionStorage(type, [k1,k2]); // => chrome.storage[type].get([k1,k2])
   .should('deep.eq', obj)     // Cypress chaining works
 ```
 
@@ -128,21 +128,21 @@ If you don't want to pollute your Cypress namespace or log with commands, you ca
 ```javascript
 const myExt = require('@elistone/cypress-extensions-plugin/helpers')(options); // options is optional
 
-myExt.clearStorage(type)        // clear `type` storage ('local', 'sync' or 'managed')
-myExt.setStorage(type, obj)     // => chrome.storage[type].set(obj)
-myExt.getStorage(type, [k1,k2]) // => chrome.storage[type].get([k1,k2])
+myExt.clearExtensionStorage(type)        // clear `type` storage ('local', 'sync' or 'managed')
+myExt.setExtensionStorage(type, obj)     // => chrome.storage[type].set(obj)
+myExt.getExtensionStorage(type, [k1,k2]) // => chrome.storage[type].get([k1,k2])
 
 // All calls return a promise, regardless of whether the actual
 // backend method called has a sync, callback or promise return type
-myExt.execCommand('runtime', 'sendMessage', [msg]) // => chrome.runtime.sendMessage(msg)
-myExt.execCommand('tabs.TAB_ID_NONE')               // => chrome.runtime.sendMessage(msg)
-myExt.execCommand('pageAction', 'show', [], { returnType: 'sync' })  // => chrome.runtime.sendMessage(msg)
+myExt.execExtensionCommand('runtime', 'sendMessage', [msg]) // => chrome.runtime.sendMessage(msg)
+myExt.execExtensionCommand('tabs.TAB_ID_NONE')               // => chrome.runtime.sendMessage(msg)
+myExt.execExtensionCommand('pageAction', 'show', [], { returnType: 'sync' })  // => chrome.runtime.sendMessage(msg)
   .then((response) => doSomething(response));
 
 // you can keep 2 helper objects around to control 2 different extensions
 const myOtherExt = require('@elistone/cypress-extensions-plugin/helpers')({ alias: 'myOtherExt' });
-Promise.all([myExt, myOtherExt].map(e => e.clearStorage(type)); // is equivalent to:
-Promise.all(['myExt', 'myOtherExt'].map(a => myExt.clearStorage(type, { alias: a }))
+Promise.all([myExt, myOtherExt].map(e => e.clearExtensionStorage(type)); // is equivalent to:
+Promise.all(['myExt', 'myOtherExt'].map(a => myExt.clearExtensionStorage(type, { alias: a }))
 ```
 
 ## Why?
@@ -175,13 +175,13 @@ NB: Those concerns don't apply if you use the [`skipHook` option](#barebone-usag
 
 ## Implementation notes: method callbacks, sync properties and command promises
 
-Note: The plugin's default behaviour should work in 99% of the cases, only read on if you're interested in implementation details or are running into a specific problem with return values using `execExtensionCommand`/`execCommand`.
+Note: The plugin's default behaviour should work in 99% of the cases, only read on if you're interested in implementation details or are running into a specific problem with return values using `execExtensionCommand`.
 
 This plugin needs to juggle the 3 methods JS has for returning values: synchronous, callback and promise. In the Chrome extensions API, method calls (`chrome.some.property.method(arg1, ..., callback)`) are async, accepting a callback as their last argument to pass their return value, while properties are accessed synchronously (`chrome.some.property`). Cypress, in contrast, uses and expects promises everywhere. So the plugin needs to turn the callbacks/sync returns of the browser API into promises for Cypress.
 
-So it assumes Chrome's convention is respected everywere and, by default it passes a callback to all method calls that it relays to the `chrome` object (i.e. when you've called `execCommand(property, method[, args])`) and "promisifies" that callback to generate the promise it returns to Cypress. On mere property access (i.e. when you're not passing a `method`: `execCommand(property)`), it assumes access to a synchronous value and resolves its return promise to that value.
+So it assumes Chrome's convention is respected everywere and, by default it passes a callback to all method calls that it relays to the `chrome` object (i.e. when you've called `execExtensionCommand(property, method[, args])`) and "promisifies" that callback to generate the promise it returns to Cypress. On mere property access (i.e. when you're not passing a `method`: `execExtensionCommand(property)`), it assumes access to a synchronous value and resolves its return promise to that value.
 
-But should you ever find yourself calling a method that, for some reason, doesn't follow the convention and makes a synchronous return instead of accepting a callback (the only example I could find was [`pageAction.show()/hide()`](https://developer.chrome.com/extensions/pageAction#method-show)), you'll need to pass the `{ returnType: 'sync' }` option to let the plugin know how to handle it (`execCommand(property, method, args, { returnType: 'sync' }`). Otherwise, the plugin will try to pass a callback, which is likely to result in an error and the result getting lost.
+But should you ever find yourself calling a method that, for some reason, doesn't follow the convention and makes a synchronous return instead of accepting a callback (the only example I could find was [`pageAction.show()/hide()`](https://developer.chrome.com/extensions/pageAction#method-show)), you'll need to pass the `{ returnType: 'sync' }` option to let the plugin know how to handle it (`execExtensionCommand(property, method, args, { returnType: 'sync' }`). Otherwise, the plugin will try to pass a callback, which is likely to result in an error and the result getting lost.
 
 (This is the same kind of problem Mozilla's [`webextension-polyfill`](https://github.com/mozilla/webextension-polyfill) run into  when they need to turn Chrome's callback-based returns into promises as per the emerging WebExtension standard based off Chrome's API, though they solve it in a [slightly more involved way](https://github.com/mozilla/webextension-polyfill/blob/596f47bcc8715aa5301612cffce0c60540c02bff/src/browser-polyfill.js#L135-L143) I didn't feel was worth replicating here.)
 
