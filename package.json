@@ -1,10 +1,10 @@
 {
-  "name": "@elistone/cypress-extensions-plugin",
+  "name": "cypress-extensions-plugin",
   "version": "0.1.5",
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
   "scripts": {
-    "test": "node_modules/cypress/bin/cypress run --browser chrome --reporter junit"
+    "test": "node_modules/cypress/bin/cypress run --browser firefox --reporter junit"
   },
   "keywords": [
     "cypress",
@@ -20,7 +20,7 @@
   ],
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^2.1.0",
+    "cypress": "^9.7.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-cypress": "^2.0.1",
