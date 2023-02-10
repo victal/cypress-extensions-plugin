@@ -1,7 +1,7 @@
-/* global chrome */
+/* global browser */
 // This file is a template, not a module
 // It will be added to the extension while the tests run, to let Cypress pass commands
-// to the background tab and access the browser/chrome object and the local storage
+// to the background tab and access the browser/browser object and the local storage
 // It MAY contain an {{alias}} placeholder, to link it to a specific extension
 // It MAY include JS require statements, as it's then bundled with Browserify
 const common = require('../lib/common');
@@ -9,10 +9,10 @@ const common = require('../lib/common');
 const { responseType, commandType } = common.constants;
 const log = common.logger({ prefix: 'Cypress ext bg' });
 
-function getProperty(chrome, property) {
-  if (!property || property.trim() === '') return chrome;
+function getProperty(browser, property) {
+  if (!property || property.trim() === '') return browser;
   const propertyPath = property.split('.');
-  return propertyPath.reduce((position, nextStep) => position[nextStep], chrome);
+  return propertyPath.reduce((position, nextStep) => position[nextStep], browser);
 }
 
 function logPromiseResult(promise) {
@@ -24,7 +24,7 @@ function logPromiseResult(promise) {
 
 function addPromisifiedCb(args, resolve, reject) {
   return (args || []).concat(val => (
-    (chrome.runtime.lastError ? reject(chrome.runtime.lastError) : resolve(val))
+    (browser.runtime.lastError ? reject(chrome.runtime.lastError) : resolve(val))
   ));
 }
 
@@ -35,7 +35,7 @@ function executeBrowserCommand(message) {
   const { debug, property, method, returnType, args } = message;
   if (debug) log(`Calling command ${property}.${method}()`, message);
   const promise = new Promise((resolve, reject) => {
-    const target = getProperty(chrome, property);
+    const target = getProperty(browser, property);
     if (!method) { // always sync if just accessing property (no method)
       resolve(target);
     } else if (returnType === 'callback') {
@@ -57,7 +57,7 @@ function executeBrowserCommand(message) {
   return promise;
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.cypressExtType === commandType) {
     const { responseId } = message;
     const cypressExtType = responseType;
