@@ -10,7 +10,6 @@ const hookFilesDir = 'cypress-extension-hooks';
 
 const defaultOptions = {
   alias: defaultAlias,
-  validBrowsers: ['chrome'],
   skipHooks: false,
   cypressMatches: ['*://*/*/integration/*'],
   watch: true,
@@ -146,16 +145,13 @@ const whenAllBuilt = () => Promise.all(buildPromises);
 // for use in the on('before:browser:launch') Cypress hook
 // returns a promise resolving to the browser args once all the tempextensions are built
 function onBeforeBrowserLaunch(browser = {}, launchOptions) {
-
   return whenAllBuilt().then(() => {
     const toLoad = definitions.filter(opts => (
       !opts.validBrowsers || opts.validBrowsers.includes(browser.name)
     ));
     if (toLoad.length > 0) {
       const dirList = toLoad.map(o => o.destDir)
-      for (const dir of dirList) {
-        launchOptions.extensions.push(dir)
-      }
+      launchOptions.extensions.push(...dirList)
     }
     return launchOptions;
   });
