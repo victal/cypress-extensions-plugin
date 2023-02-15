@@ -4,7 +4,7 @@
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
   "scripts": {
-    "test": "cypress run --browser chrome",
+    "test": "cypress run --browser chrome --headed",
     "lint": "eslint .",
     "cy:open": "cypress open"
   },
