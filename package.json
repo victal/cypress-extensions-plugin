@@ -4,7 +4,7 @@
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
   "scripts": {
-    "test": "cypress run --browser chrome --reporter junit",
+    "test": "cypress run --browser chrome",
     "cy:open": "cypress open"
   },
   "keywords": [
@@ -17,6 +17,9 @@
     {
       "name": "Eli Stone",
       "url": "https://github.com/elistone"
+    }, {
+      "name": "Guilherme Victal",
+      "url": "https://github.com/victal"
     }
   ],
   "license": "ISC",
@@ -32,7 +35,7 @@
     "browserify-versionify": "^1.0.6",
     "chokidar": "^3.5.3",
     "fs-extra": "^11.1.0",
-    "nanoid": "^4.0.1",
+    "nanoid": "^3.3.4",
     "unzip-crx": "^0.2.0"
   },
   "publishConfig": {
