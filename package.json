@@ -5,6 +5,7 @@
   "main": "loader.js",
   "scripts": {
     "test": "cypress run --browser chrome",
+    "lint": "eslint .",
     "cy:open": "cypress open"
   },
   "keywords": [
@@ -17,7 +18,8 @@
     {
       "name": "Eli Stone",
       "url": "https://github.com/elistone"
-    }, {
+    },
+    {
       "name": "Guilherme Victal",
       "url": "https://github.com/victal"
     }
@@ -28,7 +30,8 @@
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-import": "^2.27.5"
+    "eslint-plugin-import": "^2.27.5",
+    "husky": "^8.0.3"
   },
   "dependencies": {
     "browserify": "^17.0.0",
