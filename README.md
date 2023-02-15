@@ -2,10 +2,20 @@
 
 This Cypress plugin provides a few helpers to help you test your browser extension without messing with its code just for testing.
 
+# ⚠WARNING⚠
+
+This plugin is being updated in order to satisfy a specific use case for the current developer.
+As such, this is not guaranteed to work with:
+ - Cypress versions other than the version currently listed as a dependency in package.json
+ - Browsers other than the latest Chrome or Firefox
+ - Use cases beyond what's currently implemented
+
+Further maintenance in this project is also not to be expected.
+
 ## Installation
 
 ```
-npm install --save-dev @elistone/cypress-extensions-plugin
+npm install --save-dev @victal/cypress-extensions-plugin
 ```
 
 ## Regular Usage
@@ -14,17 +24,17 @@ In your project's [plugins file](https://on.cypress.io/guides/guides/plugins.htm
 
 ```javascript
 // cypress/plugins/index.js
-const extensionLoader = require('@elistone/cypress-extensions-plugin/loader');
+const extensionLoader = require('@victal/cypress-extensions-plugin/loader');
 
 module.exports = (on) => {
   on('before:browser:launch', extensionLoader.load('/path/to/your/extension'));
 }
 
 // cypress/support/command.js
-const addExtensionCommands = require('@elistone/cypress-extensions-plugin/commands');
+const addExtensionCommands = require('@victal/cypress-extensions-plugin/commands');
 addExtensionCommands(Cypress);
 
-// cypress/integration/my_spec.js or cypress/support/index.js
+// cypress/integration/my_spec.cy.js or cypress/support/index.js
 beforeEach(() => {
   cy.clearExtensionStorage('local');
 });
@@ -58,7 +68,7 @@ on('before:browser:launch', extensionLoader.load({
   watch: true,                  // rebuilds the temp dir extension on source files changes, useful on exts implementing live reload
   validBrowser: ['chrome'],     // valid browser names to load the extension to, null for all
   quiet: false,                 // disables loader console logs when set to true
-  destDir: '/tmp/dir/my/ext'    // where your ext will be copied, modified and loaded into Chrome, defaults to ${os.tmpdir()}/${alias}
+  destDir: '/tmp/dir/my/ext'    // where your ext will be copied, modified and loaded into the browser, defaults to ${os.tmpdir()}/${alias}
   cypressMatches: ['*://*/*/integration/*'] // identifies Cypress frames by URL to prevent your extension loading in those, set it if your test dir is not cypress/integration/, must be an array
 }))
 ```
@@ -68,7 +78,7 @@ You can also define several extensions, in which case you'll need to give them a
 ```javascript
 on('before:browser:launch', (browser = {}, args) => {
   return extensionLoader.load(
-    '/path/to/ext1', // alias defaults to myExtension
+    '/path/to/ext1', // alias defaults to "myExtension"
     // all exts need their own alias (at most one can have the default alias)
     { source: '/path/to/ext2', alias: 'ext2' }, 
     { source: '/path/to/ext3', alias: 'ext3' },
@@ -79,7 +89,7 @@ on('before:browser:launch', (browser = {}, args) => {
 A few convenience commands are provided for storage management:
 
 ```javascript
-const addExtensionCommands = require('@elistone/cypress-extensions-plugin/commands');
+const addExtensionCommands = require('@victal/cypress-extensions-plugin/commands');
 addExtensionCommands(Cypress) // options is optional, more below
 
 // in spec/beforeEach hooks
@@ -126,7 +136,7 @@ require('@elistone/cypress-extensions-plugin/commands')(Cypress)({
 If you don't want to pollute your Cypress namespace or log with commands, you can get a simple helper object, which works the same as the commands without the Cypress command/log sugar. All the helpers just return a promise:
 
 ```javascript
-const myExt = require('@elistone/cypress-extensions-plugin/helpers')(options); // options is optional
+const myExt = require('@victal/cypress-extensions-plugin/helpers')(options); // options is optional
 
 myExt.clearExtensionStorage(type)        // clear `type` storage ('local', 'sync' or 'managed')
 myExt.setExtensionStorage(type, obj)     // => chrome.storage[type].set(obj)
@@ -187,5 +197,4 @@ But should you ever find yourself calling a method that, for some reason, doesn'
 
 ## TODO
 
-- Cross-browser compatibility (so far built for Chrome, like Cypress, should work OOTB with FF when supported by Cypress but untested so far)
 - Add secure messaging (encryption+nonce+loader generates pwd shared w/ helpers via Cypress config/env?) so visited pages can't exploit `window.postMessage` listeners to abuse your background API (low-priority, see [Security](#security))
