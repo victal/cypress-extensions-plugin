@@ -28,10 +28,10 @@ function addPromisifiedCb(args, resolve, reject) {
   ));
 }
 
-// calls method on (given property of) the chrome API object and returns a promise
+// calls method on (given property of) the browser API object and returns a promise
 // since it can't know in advance if the method has a sync return, a promise or a callback,
 // this relies on the message.returnType passed by the caller (set to 'callback' if cb)
-function executechromeCommand(message) {
+function executeBrowserCommand(message) {
   const { debug, property, method, returnType, args } = message;
   if (debug) log(`Calling command ${property}.${method}()`, message);
   const promise = new Promise((resolve, reject) => {
@@ -49,7 +49,6 @@ function executechromeCommand(message) {
           resolve(res);
         }
       } catch (err) {
-        console.error(err)
         reject(err);
       }
     }
@@ -62,11 +61,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.cypressExtType === commandType) {
     const { responseId } = message;
     const cypressExtType = responseType;
-    executechromeCommand(message).then(
+    executeBrowserCommand(message).then(
       response => sendResponse({ responseId, cypressExtType, response }),
       error => sendResponse({ responseId, cypressExtType, error }),
     );
-    // tells chrome API the response to sendResponse will be async
+    // tells browser API the response to sendResponse will be async
     return true;
   }
   return false;
