@@ -3,7 +3,7 @@
 // It will be added to the extension while the tests run, to let Cypress pass commands
 // to the background tab and access the browser/chrome object and the local storage
 // It MAY contain an {{alias}} placeholder, to link it to a specific extension
-// It MAY include JS require statements, as it's then bundled with Browserify
+// It MAY include JS require statements, as it's then bundled with browserify
 const common = require('../lib/common');
 
 const { responseType, commandType } = common.constants;
@@ -24,7 +24,7 @@ function logPromiseResult(promise) {
 
 function addPromisifiedCb(args, resolve, reject) {
   return (args || []).concat(val => (
-    (chrome.runtime.lastError ? reject(chrome.runtime.lastError) : resolve(val))
+    (chrome.runtime.lastError ? reject(new Error(chrome.runtime.lastError)) : resolve(val))
   ));
 }
 
@@ -39,10 +39,10 @@ function executeBrowserCommand(message) {
     if (!method) { // always sync if just accessing property (no method)
       resolve(target);
     } else if (returnType === 'callback') {
-      target[method].apply(this, addPromisifiedCb(args, resolve, reject));
+      target[method].apply(target, addPromisifiedCb(args, resolve, reject));
     } else { // returnType sync or promise
       try {
-        const res = target[message].apply(this, args);
+        const res = target[message].apply(target, args);
         if (res && typeof res.then === 'function') {
           res.then(resolve, reject);
         } else {

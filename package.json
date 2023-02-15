@@ -1,10 +1,11 @@
 {
-  "name": "@elistone/cypress-extensions-plugin",
+  "name": "cypress-extensions-plugin",
   "version": "0.1.5",
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
   "scripts": {
-    "test": "node_modules/cypress/bin/cypress run --browser chrome --reporter junit"
+    "test": "cypress run --browser chrome",
+    "cy:open": "cypress open"
   },
   "keywords": [
     "cypress",
@@ -16,22 +17,25 @@
     {
       "name": "Eli Stone",
       "url": "https://github.com/elistone"
+    }, {
+      "name": "Guilherme Victal",
+      "url": "https://github.com/victal"
     }
   ],
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^2.1.0",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-cypress": "^2.0.1",
-    "eslint-plugin-import": "^2.10.0"
+    "cypress": "^12.5.1",
+    "eslint": "^8.34.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-import": "^2.27.5"
   },
   "dependencies": {
-    "browserify": "^16.2.0",
+    "browserify": "^17.0.0",
     "browserify-versionify": "^1.0.6",
-    "chokidar": "^2.0.3",
-    "fs-extra": "^5.0.0",
-    "nanoid": "^1.0.2",
+    "chokidar": "^3.5.3",
+    "fs-extra": "^11.1.0",
+    "nanoid": "^3.3.4",
     "unzip-crx": "^0.2.0"
   },
   "publishConfig": {

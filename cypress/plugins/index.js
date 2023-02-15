@@ -2,7 +2,7 @@ const extensionLoader = require('../../loader.js');
 const path = require('path');
 
 module.exports = (on, config) => {
-  on('before:browser:launch', (browser = {}, args) => (
+  on('before:browser:launch', (browser = {}, launchOptions) => (
     extensionLoader.load(
       path.join(config.fixturesFolder, 'unpacked'), {
         source: path.join(config.fixturesFolder, 'unpacked'),
@@ -18,6 +18,6 @@ module.exports = (on, config) => {
         source: path.join(config.fixturesFolder, 'crxpacked.crx'),
         alias: 'crxpacked',
       },
-    )(browser, args)
+    )(browser, launchOptions)
   ));
 };
