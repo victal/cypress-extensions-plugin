@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy: 
       matrix: 
-        browser: ['chrome']
+        browser: ['chrome', 'firefox']
     name: Run Cypress tests on ${{ matrix.browser }}
     steps:
       - name: Checkout
@@ -17,4 +17,16 @@ jobs:
           headed: true
           browser: ${{ matrix.browser }}
           record: false
-
+  release:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '18'
+      - run: npm ci
+      - name: Release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm run semantic-release
