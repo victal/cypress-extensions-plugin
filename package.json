@@ -1,6 +1,6 @@
 {
   "name": "@victal/cypress-extensions-plugin",
-  "version": "0.1.6-beta.1",
+  "version": "0.1.6",
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",
   "files": [
