@@ -17,13 +17,13 @@ function getProperty(chrome, property) {
 
 function logPromiseResult(promise) {
   promise.then(
-    res => log('Command success', res) || res,
-    err => log('Command error', err) || err,
+    (res) => log('Command success', res) || res,
+    (err) => log('Command error', err) || err,
   );
 }
 
 function addPromisifiedCb(args, resolve, reject) {
-  return (args || []).concat(val => (
+  return (args || []).concat((val) => (
     (chrome.runtime.lastError ? reject(new Error(chrome.runtime.lastError)) : resolve(val))
   ));
 }
@@ -62,8 +62,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const { responseId } = message;
     const cypressExtType = responseType;
     executeBrowserCommand(message).then(
-      response => sendResponse({ responseId, cypressExtType, response }),
-      error => sendResponse({ responseId, cypressExtType, error }),
+      (response) => sendResponse({ responseId, cypressExtType, response }),
+      (error) => sendResponse({ responseId, cypressExtType, error }),
     );
     // tells browser API the response to sendResponse will be async
     return true;
