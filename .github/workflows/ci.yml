@@ -19,6 +19,8 @@ jobs:
           record: false
   release:
     needs: cypress-run
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.3.0
