@@ -1,3 +1,10 @@
+## [0.1.6-beta.2](https://github.com/victal/cypress-extensions-plugin/compare/v0.1.6-beta.1...v0.1.6-beta.2) (2023-02-20)
+
+
+### Bug Fixes
+
+* lint fixes ([fec7b6f](https://github.com/victal/cypress-extensions-plugin/commit/fec7b6fb7bb19a7f1146d301d4e729fd4d4e97dd))
+
 ## [0.1.6-beta.1](https://github.com/victal/cypress-extensions-plugin/compare/v0.1.5...v0.1.6-beta.1) (2023-02-20)
 
 
