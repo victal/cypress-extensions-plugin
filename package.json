@@ -1,5 +1,5 @@
 {
-  "name": "cypress-extensions-plugin",
+  "name": "@victal/cypress-extensions-plugin",
   "version": "0.1.5",
   "description": "End-to-end test your browser extensions with Cypress",
   "main": "loader.js",

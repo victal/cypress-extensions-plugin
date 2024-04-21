@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy: 
       matrix: 
-        browser: ['chrome']
+        browser: ['chrome', 'firefox']
     name: Run Cypress tests on ${{ matrix.browser }}
     steps:
       - name: Checkout
@@ -17,4 +17,3 @@ jobs:
           headed: true
           browser: ${{ matrix.browser }}
           record: false
-

@@ -47,7 +47,7 @@ That's all you need to load a single extension and reset its storage on each tes
 Use this if you don't need Cypress to send commands to your Browser API (e.g. no local storage to reset):
 
 ```javascript
-const loadExtension = require('@elistone/cypress-extensions-plugin/loader').load;
+const loadExtension = require('@victal/cypress-extensions-plugin/loader').load;
 
 on('before:browser:launch', loadExtension({
   source: '/path/to/myext',
@@ -126,7 +126,7 @@ cy.execExtensionCommand('runtime', 'postMessage', [msg], {
 You can set default options for all subsequent commands with a context config:
 
 ```javascript
-require('@elistone/cypress-extensions-plugin/commands')(Cypress)({
+require('@victal/cypress-extensions-plugin/commands')(Cypress)({
   alias: 'myOtherExtension', // send commands to specific extension loaded with custom alias
   debug: true,               // log extension command stuff to console by default
   timeout: 5000,             // change default timeout for extension commands
@@ -150,7 +150,7 @@ myExt.execExtensionCommand('pageAction', 'show', [], { returnType: 'sync' })  //
   .then((response) => doSomething(response));
 
 // you can keep 2 helper objects around to control 2 different extensions
-const myOtherExt = require('@elistone/cypress-extensions-plugin/helpers')({ alias: 'myOtherExt' });
+const myOtherExt = require('@victal/cypress-extensions-plugin/helpers')({ alias: 'myOtherExt' });
 Promise.all([myExt, myOtherExt].map(e => e.clearExtensionStorage(type)); // is equivalent to:
 Promise.all(['myExt', 'myOtherExt'].map(a => myExt.clearExtensionStorage(type, { alias: a }))
 ```
