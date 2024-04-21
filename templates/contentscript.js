@@ -8,13 +8,13 @@ const log = require('../lib/common').logger({ prefix: 'Cypress ext contentscript
 
 const targetWindow = window.top;
 
-const logMethod = method => (method ? `.${method}()` : '');
+const logMethod = (method) => (method ? `.${method}()` : '');
 
 targetWindow.addEventListener('message', function relayCommandsToBackground(event) {
   if (
-    event.data &&
-    event.data.cypressExtType &&
-    event.data.alias === '{{alias}}'
+    event.data
+    && event.data.cypressExtType
+    && event.data.alias === '{{alias}}'
   ) {
     const { debug, property, method, cypressExtType } = event.data;
     if (debug) log(`Relaying ${cypressExtType} to backend: ${property}${logMethod(method)}`, event.data);

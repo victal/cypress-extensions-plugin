@@ -1,5 +1,5 @@
-const extensionLoader = require('../../loader.js');
 const path = require('path');
+const extensionLoader = require('../../loader.js');
 
 module.exports = (on, config) => {
   on('before:browser:launch', (browser = {}, launchOptions) => (

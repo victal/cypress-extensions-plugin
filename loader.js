@@ -73,7 +73,7 @@ async function buildFiles(opts) {
   const manifest = await fs.readJson(path.join(opts.destDir, 'manifest.json'));
   // Allow extension content scripts in all non-Cypress frames
   const cs = manifest.content_scripts;
-  manifest.content_scripts = cs && cs.map(scriptObj => (
+  manifest.content_scripts = cs && cs.map((scriptObj) => (
     merge(scriptObj, { all_frames: true, exclude_matches: opts.cypressMatches })
   ));
 
@@ -111,7 +111,7 @@ async function buildFiles(opts) {
 
 // prevents duplicate watchers list growing whenever Cypress relaunches a new browser
 function resetWatchers() {
-  watchers.forEach(w => w.close());
+  watchers.forEach((w) => w.close());
   watchers = [];
 }
 
@@ -157,12 +157,12 @@ const whenAllBuilt = () => Promise.all(buildPromises);
 // returns a promise resolving to the browser args once all the tempextensions are built
 function onBeforeBrowserLaunch(browser = {}, launchOptions) {
   return whenAllBuilt().then(() => {
-    const toLoad = definitions.filter(opts => (
+    const toLoad = definitions.filter((opts) => (
       !opts.validBrowsers || opts.validBrowsers.includes(browser.name)
     ));
     if (toLoad.length > 0) {
-      const dirList = toLoad.map(o => o.destDir)
-      launchOptions.extensions.push(...dirList)
+      const dirList = toLoad.map((o) => o.destDir);
+      launchOptions.extensions.push(...dirList);
     }
     return launchOptions;
   });
