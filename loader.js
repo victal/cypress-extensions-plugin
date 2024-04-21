@@ -37,11 +37,16 @@ function createExtensionDefinition(userOptions) {
   );
 }
 
-function copyHookFile(templateFile, destDir, fileName, alias) {
+function copyHookFile(templateFile, destDir, fileName, alias, currentFile) {
   const destFile = path.resolve(destDir, hookFilesDir, fileName);
   const distStream = fs.createWriteStream(destFile);
-  browserify(templateFile)
+  const bundlePipeline = browserify(templateFile)
     .transform('browserify-versionify', { placeholder: '{{alias}}', version: alias })
+
+  if (currentFile) {
+    bundlePipeline.add(path.resolve(destDir, currentFile))
+  }
+  bundlePipeline
     .bundle()
     .pipe(distStream);
   return new Promise((resolve, reject) => {
@@ -75,13 +80,19 @@ async function buildFiles(opts) {
   // Inject hooks
   if (!opts.skipHooks) {
     // Copy hook files
-    await copyHookFile(opts.backgroundHookTemplate, opts.destDir, 'background.js', opts.alias);
     await copyHookFile(opts.contentHookTemplate, opts.destDir, 'contentscript.js', opts.alias);
 
     // Inject background hook into manifest
     manifest.background = manifest.background || {};
-    manifest.background.scripts = manifest.background.scripts || [];
-    manifest.background.scripts.push(path.join(hookFilesDir, 'background.js'));
+    if (manifest.manifest_version === 3) {
+      const currentServiceWorker = manifest.background.service_worker
+      await copyHookFile(opts.backgroundHookTemplate, opts.destDir, 'background.js', opts.alias, currentServiceWorker);
+      manifest.background.service_worker = path.join(hookFilesDir, 'background.js')
+    } else {
+      await copyHookFile(opts.backgroundHookTemplate, opts.destDir, 'background.js', opts.alias);
+      manifest.background.scripts = manifest.background.scripts || [];
+      manifest.background.scripts.push(path.join(hookFilesDir, 'background.js'));
+    }
 
     // Inject content hook into manifest
     if (!manifest.content_scripts) manifest.content_scripts = [];
