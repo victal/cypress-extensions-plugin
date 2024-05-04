@@ -1,5 +1,5 @@
 const path = require('path');
-const extensionLoader = require('../../loader.js');
+const extensionLoader = require('../../loader');
 
 module.exports = (on, config) => {
   on('before:browser:launch', (browser = {}, launchOptions) => (
@@ -17,7 +17,17 @@ module.exports = (on, config) => {
       }, {
         source: path.join(config.fixturesFolder, 'crxpacked.crx'),
         alias: 'crxpacked',
-      },
+      }, {
+        source: path.join(config.fixturesFolder, 'manifestv3'),
+        alias: 'manifestv3-chrome',
+        validBrowsers: ['chrome'],
+        manifest: 'manifest-chrome.json'
+      }, {
+        source: path.join(config.fixturesFolder, 'manifestv3'),
+        alias: 'manifestv3-firefox',
+        validBrowsers: ['firefox'],
+        manifest: 'manifest-firefox.json'
+      }
     )(browser, launchOptions)
   ));
 };

@@ -64,6 +64,7 @@ You can pass options to the loader (here with their default value, unless requir
 on('before:browser:launch', extensionLoader.load({
   source: '/path/to/extension', // path to the dir (unpacked) or crx extension, required
   alias: 'myExtension',         // identifier for use in tests if multiple extensions
+  manifest: 'manifest.json',    // path to the manifest file to use, in case different files are used per-browser or per-environment
   skipHooks: false              // don't inject content/background hook scripts, more secure and less intrusive but you can't use helpers/commands, set it to true if you don't need them
   watch: true,                  // rebuilds the temp dir extension on source files changes, useful on exts implementing live reload
   validBrowser: ['chrome'],     // valid browser names to load the extension to, null for all

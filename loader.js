@@ -10,6 +10,7 @@ const hookFilesDir = 'cypress-extension-hooks';
 
 const defaultOptions = {
   alias: defaultAlias,
+  manifest: 'manifest.json',
   skipHooks: false,
   cypressMatches: ['*://*/*/integration/*'],
   watch: true,
@@ -41,10 +42,10 @@ function copyHookFile(templateFile, destDir, fileName, alias, currentFile) {
   const destFile = path.resolve(destDir, hookFilesDir, fileName);
   const distStream = fs.createWriteStream(destFile);
   const bundlePipeline = browserify(templateFile)
-    .transform('browserify-versionify', { placeholder: '{{alias}}', version: alias })
+    .transform('browserify-versionify', { placeholder: '{{alias}}', version: alias });
 
   if (currentFile) {
-    bundlePipeline.add(path.resolve(destDir, currentFile))
+    bundlePipeline.add(path.resolve(destDir, currentFile));
   }
   bundlePipeline
     .bundle()
@@ -70,7 +71,7 @@ async function buildFiles(opts) {
   await fs.mkdir(path.join(opts.destDir, hookFilesDir));
 
   // Update manifest
-  const manifest = await fs.readJson(path.join(opts.destDir, 'manifest.json'));
+  const manifest = await fs.readJson(path.join(opts.destDir, opts.manifest));
   // Allow extension content scripts in all non-Cypress frames
   const cs = manifest.content_scripts;
   manifest.content_scripts = cs && cs.map((scriptObj) => (
@@ -85,9 +86,9 @@ async function buildFiles(opts) {
     // Inject background hook into manifest
     manifest.background = manifest.background || {};
     if (manifest.manifest_version === 3) {
-      const currentServiceWorker = manifest.background.service_worker
+      const currentServiceWorker = manifest.background.service_worker;
       await copyHookFile(opts.backgroundHookTemplate, opts.destDir, 'background.js', opts.alias, currentServiceWorker);
-      manifest.background.service_worker = path.join(hookFilesDir, 'background.js')
+      manifest.background.service_worker = path.join(hookFilesDir, 'background.js');
     } else {
       await copyHookFile(opts.backgroundHookTemplate, opts.destDir, 'background.js', opts.alias);
       manifest.background.scripts = manifest.background.scripts || [];

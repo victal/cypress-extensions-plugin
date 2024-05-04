@@ -1,0 +1,23 @@
+{
+  "name": "Manifestv3-ff",
+  "short_name": "manifestv3-ff",
+  "description": "A minimal unpacked extension, that sets some stuff to the local storage in the background tab, to test support for manifest v3 when it arrives",
+  "version": "0.0.0",
+  "manifest_version": 2,
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "scripts": ["background-ff.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "contentscript.js"
+      ]
+    }
+  ]
+}

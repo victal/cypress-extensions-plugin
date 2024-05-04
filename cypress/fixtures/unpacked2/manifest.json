@@ -3,12 +3,14 @@
   "short_name": "unpacked2",
   "description": "A second minimal unpacked extension, that sets some stuff to the local storage in the background tab, to test the multi-extension abilities of the plugin",
   "version": "0.0.0",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "permissions": [
     "storage"
   ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": [
+      "background.js"
+    ]
   },
   "content_scripts": [
     {

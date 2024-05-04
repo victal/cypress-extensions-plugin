@@ -13,6 +13,20 @@ describe('one extension', () => {
   });
 });
 
+describe('a manifest v3 extension', () => {
+  it('can access the local storage', () => {
+    console.log(Cypress.browser.name);
+    const manifestv3 = extensionHelpers({ alias: `manifestv3-${Cypress.browser.name}` });
+    cy.visit('https://example.cypress.io').should(() => {
+      manifestv3.setStorage('local', { myKey: 'myVal' })
+        .then(() => manifestv3.getStorage('local', 'myKey'))
+        .then((storage) => {
+          expect(storage.myKey).to.eq('myVal');
+        });
+    });
+  });
+});
+
 describe('several extensions', () => {
   const unpacked1 = extensionHelpers({ alias: 'unpacked1', debug: true });
   const unpacked2 = extensionHelpers({ alias: 'unpacked2' });
@@ -57,7 +71,10 @@ describe('hookless extension', () => {
       const start = Date.now();
       cy.then(() => (
         hookless.setStorage('local', {}).then(
-          (res) => { assert.fail(res, Error, 'should have been a timeout'); },
+          (res) => {
+            assert.fail(res, Error, 'should have been a timeout');
+          },
+        ).catch(
           (err) => {
             expect(err).to.be.an('error');
             expect(Date.now() - start).to.be.closeTo(2000, 100);
