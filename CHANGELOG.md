@@ -1,3 +1,10 @@
+## [0.1.7](https://github.com/victal/cypress-extensions-plugin/compare/v0.1.6...v0.1.7) (2024-05-04)
+
+
+### Bug Fixes
+
+* trigger fix release ([d94ee85](https://github.com/victal/cypress-extensions-plugin/commit/d94ee85a3bbbbb351bec9b7b085ac9768cf51b1e))
+
 ## [0.1.6](https://github.com/victal/cypress-extensions-plugin/compare/v0.1.5...v0.1.6) (2023-02-20)
 
 
