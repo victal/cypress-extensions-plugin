@@ -1,0 +1,23 @@
+{
+  "name": "Manifestv3",
+  "short_name": "manifestv3",
+  "description": "A minimal unpacked extension, that sets some stuff to the local storage in the background tab, to test support for manifest v3",
+  "version": "0.0.0",
+  "manifest_version": 3,
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "contentscript.js"
+      ]
+    }
+  ]
+}
